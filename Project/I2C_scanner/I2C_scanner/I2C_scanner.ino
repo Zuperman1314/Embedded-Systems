@@ -2,12 +2,13 @@
 
 void setup()
 {
+
   Wire.begin();
   Serial.begin(9600);
   Serial.println('\nI2C Scanner');
   
   // put your setup code here, to run once:
-  
+
 }
 
 void loop()
@@ -44,6 +45,8 @@ void loop()
     Serial.println("done\n");
 
   delay(5000);           // wait 5 seconds for next scan
+
+
 }
  
   // put your main code here, to run repeatedly:

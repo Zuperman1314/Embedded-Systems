@@ -16,22 +16,36 @@
 */
 
 #include "Task1.h"
-#define MAX_PROCESSES 3
+
+#define MAX_PROCESSES 3 //Maximum number of processes
+
+//#define DEBUG
 
 volatile int flag = LOW;
 int counter = 0; // A counter for number of pprocesses
 
+
+LiquidCrystal_I2C lcd(16, 2);
+
+
 void setup()
 {
 	pinMode(PUSH2, INPUT_PULLUP); //set the push button 2 as input with the pull up resistor
-	pinMode(LED1, OUTPUT);
 	attachInterrupt(PUSH2, count, FALLING); //Interrupt id fired whenever button is pressed	
 	Serial.begin(9600);
 	Serial.println("Initialized");
+	Wire.begin();
+
+	lcd.init();
+	lcd.backlight();
 }
 
 void loop()
 {
+	//uint8_t add = scanI2C() - 100;
+	//Serial.print("Address: ");
+	//Serial.println(add);
+	lcd.clear(); //Clear everyting on LCD
 	if (flag)
 	{
 		if (counter == MAX_PROCESSES)
@@ -44,9 +58,6 @@ void loop()
 		}
 		flag = LOW;
 	}
-	#ifdef DEBUG
-		Serial.println(counter);
-	#endif
 	switch (counter) 
 	{
 	    case 1:
@@ -55,6 +66,10 @@ void loop()
 		    	Serial.print(counter);
 		    	Serial.print('\t');
 		    	Serial.println("Mode 1");
+		    #else
+		    	Serial.println("Amir");
+				lcd.setCursor(0,0);
+				lcd.print("Energia");
 	    	#endif
 	      break;
 	    case 2:
@@ -64,6 +79,8 @@ void loop()
 		    	Serial.print(counter);
 		    	Serial.print('\t');
 		    	Serial.println("Mode 2");
+		    #else
+
 	    	#endif
 	    	break;
 	    case 3:
@@ -73,12 +90,15 @@ void loop()
 		    	Serial.print(counter);
 		    	Serial.print('\t');
 		    	Serial.println("Mode 3");
+		    #else
+
 	    	#endif
 	      break;
 	    default:
 	      // ERROR
 	      break;
 	}
+	delay(1000);
 }
 
 void count()
