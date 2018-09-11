@@ -25,7 +25,7 @@ volatile int flag = LOW;
 int counter = 0; // A counter for number of pprocesses
 
 
-LiquidCrystal_I2C lcd(16, 2);
+LiquidCrystal_I2C lcd(16, 2); //Create a LCD instance
 
 
 void setup()
@@ -36,8 +36,8 @@ void setup()
 	Serial.println("Initialized");
 	Wire.begin();
 
-	lcd.init();
-	lcd.backlight();
+	lcd.init(); 		//Initialize LCD
+	lcd.backlight();	//Turn ICD backlight on
 }
 
 void loop()
@@ -67,9 +67,11 @@ void loop()
 		    	Serial.print('\t');
 		    	Serial.println("Mode 1");
 		    #else
-		    	Serial.println("Amir");
 				lcd.setCursor(0,0);
-				lcd.print("Energia");
+				lcd.print("Amir Nafisa");
+				lcd.setCursor(1,0);
+				lcd.print("Elvira");
+				
 	    	#endif
 	      break;
 	    case 2:

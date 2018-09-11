@@ -20,7 +20,7 @@ inline size_t LiquidCrystal_I2C::write(uint8_t value)
 
 LiquidCrystal_I2C::LiquidCrystal_I2C(uint8_t lcd_cols,uint8_t lcd_rows)
 {
-  //_Addr = scanI2C() - 0x100;
+  //_Addr = scanI2C() - 100;
   _Addr = 0x27;
   _cols = lcd_cols;
   _rows = lcd_rows;
