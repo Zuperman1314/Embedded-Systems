@@ -111,4 +111,42 @@ void NTC_FR::fahrenheitX10(int32_t &t) {
   }
 }
 
+void NTC_FR::serialPrint(int32_t i, char c)
+{
+  if (i<0)
+  {
+    Serial.print("-");
+    i = -i;
+  }
+  Serial.print(i/10, DEC);
+  Serial.print(".");
+  Serial.print(i%10, DEC);
+  if (c == 'C')
+  {
+    Serial.print(" oC\n");
+  }
+  else if (c == 'F')
+  {
+    Serial.print(" oF\n");
+  } 
+}
 
+void NTC_FR::lcdPrint(int32_t i, LiquidCrystal_I2C x, char c)
+{
+  if (c == 'C')
+  { 
+    x.setCursor(0,0);
+    x.print("DEGC. ");
+    x.print(i/10);
+    x.print(".");
+    x.print(i%10);  
+  }
+  else if (c == 'F')
+  {
+    x.setCursor(0,1);
+    x.print("DEGF. ");
+    x.print(i/10);
+    x.print(".");
+    x.print(i%10); 
+  }
+}

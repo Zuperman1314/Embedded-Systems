@@ -21,11 +21,12 @@
 
 //#define DEBUG
 
-volatile int flag = LOW;
+volatile int btnFlag = LOW;
 int counter = 0; // A counter for number of pprocesses
-
+int32_t temperature; //raw temp readings
 
 LiquidCrystal_I2C lcd(16, 2); //Create a LCD instance
+NTC_FR myNTC; //Create a temp sens instance
 
 
 void setup()
@@ -35,9 +36,9 @@ void setup()
 	Serial.begin(9600);
 	Serial.println("Initialized");
 	Wire.begin();
-
 	lcd.init(); 		//Initialize LCD
 	lcd.backlight();	//Turn ICD backlight on
+	myNTC.begin();		//Initialize Temp Sensor
 }
 
 void loop()
@@ -46,17 +47,11 @@ void loop()
 	//Serial.print("Address: ");
 	//Serial.println(add);
 	lcd.clear(); //Clear everyting on LCD
-	if (flag)
+	if (btnFlag)
 	{
-		if (counter == MAX_PROCESSES)
-		{
-			counter = 1;
-		}
-		else
-		{
-			counter++;
-		}
-		flag = LOW;
+		if (counter == MAX_PROCESSES) counter = 1;
+		else counter++;
+		btnFlag = LOW;
 	}
 	switch (counter) 
 	{
@@ -69,9 +64,8 @@ void loop()
 		    #else
 				lcd.setCursor(0,0);
 				lcd.print("Amir Nafisa");
-				lcd.setCursor(1,0);
+				lcd.setCursor(0,1);
 				lcd.print("Elvira");
-				
 	    	#endif
 	      break;
 	    case 2:
@@ -82,7 +76,11 @@ void loop()
 		    	Serial.print('\t');
 		    	Serial.println("Mode 2");
 		    #else
-
+		    	myNTC.get();
+		    	myNTC.celsiusX10(temperature);
+		    	myNTC.lcdPrint(temperature, lcd, 'C');
+		    	myNTC.fahrenheitX10(temperature);
+		    	myNTC.lcdPrint(temperature, lcd, 'F');
 	    	#endif
 	    	break;
 	    case 3:
@@ -100,7 +98,7 @@ void loop()
 	      // ERROR
 	      break;
 	}
-	delay(1000);
+	delay(2000);
 }
 
 void count()
@@ -109,7 +107,7 @@ void count()
 	unsigned long int_time = millis();
 	if (int_time - last_int_time > 200)
 	{
-		flag = HIGH;
+		btnFlag = HIGH;
 	}
 	last_int_time = int_time;
 }

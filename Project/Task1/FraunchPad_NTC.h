@@ -36,6 +36,7 @@
 #ifndef FRAM_Thermometer_h
 #define FRAM_Thermometer_h
 
+#include "LiquidCrystal_I2C.h"
 ///
 /// @brief Temperature NTC on FraunchPad
 ///
@@ -84,6 +85,9 @@ public:
   /// @param	t temperature in degrees celsius
   ///
   void fahrenheitX10(int32_t &t);
+
+  void serialPrint(int32_t i, char c);
+  void lcdPrint(int32_t i, LiquidCrystal_I2C x ,char c);
 
 private:
   int64_t _t;
