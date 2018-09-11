@@ -15,7 +15,29 @@
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef accelorometer_h
-#define accelorometer_h 
+// Core library - MCU-based
+#if defined(__MSP430FR5739__) // FraunchPad specific
+#include "Energia.h"
+#else // error
+#error Platform not defined
+#endif
+
+#ifndef accelerometer_h
+#define accelerometer_h 
+
+class accelerometer
+{
+public:
+    accelerometer();
+    void begin();
+    void get();
+private:
+    int8_t _Z, _Y, _X; 
+    int8_t _vRef;
+    int8_t _rDiv;
+    void readAccZ();
+    void readAccY();
+    void readAccX();
+};
 
 #endif

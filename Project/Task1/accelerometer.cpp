@@ -14,3 +14,50 @@
     You should have received a copy of the GNU General Public License
 	along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+#define ACC_Z A4
+#define ACC_Y A5
+#define ACC_X A6
+
+
+accelerometer::accelerometer()
+{
+    pinMode(NTC_ENABLE, OUTPUT);
+    pinMode(ACC_Z, INPUT);
+    pinMode(ACC_Y, INPUT);
+    pinMode(ACC_X, INPUT);
+}
+
+void accelerometer::begin()
+{
+    digitalWrite(NTC_ENABLE, HIGH);
+    _vRef = 3000;
+    _eDiv = 470000000;
+}
+
+void accelerometer::get()
+{
+    readAccZ();
+    readAccY();
+    readAccX();
+}
+
+void accelerometer::readAccZ()
+{
+    _Z = analogRead(ACC_Z);
+    _Z = (_Z * _vRef) / 1024;
+    _Z = (_Z * _rDiv) / (_vRef - _Z) / 1000;
+}
+
+void accelerometer::readAccY()
+{
+    _Y = analogRead(ACC_Y);
+    _Y = (_Y * _vRef) / 1024;
+    _Y = (_Y * _rDiv) / (_vRef - _Y) / 1000;
+}
+
+void accelerometer::readAccX()
+{
+    _X = analogRead(ACC_X);
+    _X = (_X * _vRef) / 1024;
+    _X = (_X * _rDiv) / (_vRef - _X) / 1000;
+}
