@@ -25,9 +25,9 @@ volatile int btnFlag = LOW;
 int counter = 0; // A counter for number of pprocesses
 int32_t temperature; //raw temp readings
 
-LiquidCrystal_I2C lcd(16, 2); //Create a LCD instance
-NTC_FR myNTC; //Create a temp sens instance
-
+LiquidCrystal_I2C lcd(16, 2); 	//Create a LCD instance
+NTC_FR myNTC; 					//Create a temp sens instance
+accelerometer myACC;			//Create a acc instance
 
 void setup()
 {
@@ -39,6 +39,7 @@ void setup()
 	lcd.init(); 		//Initialize LCD
 	lcd.backlight();	//Turn ICD backlight on
 	myNTC.begin();		//Initialize Temp Sensor
+	myACC.begin();		//Initialize acc
 }
 
 void loop()
@@ -88,7 +89,8 @@ void loop()
 			Serial.print('\t');
 			Serial.println("Mode 3");
 		#else
-
+			myACC.get();
+			myACC.lcdPrint(lcd);
 		#endif
     	break;
 	    default:
