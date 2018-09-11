@@ -61,3 +61,10 @@ void accelerometer::readAccX()
     _X = (_X * _vRef) / 1024;
     _X = (_X * _rDiv) / (_vRef - _X) / 1000;
 }
+
+void accelerometer::lcdPrint(LiquidCrystal_I2C lcd)
+{
+    lcd.setCursor(0,0);
+    lcd.print("X: ");
+    lcd.print(_X);
+}
