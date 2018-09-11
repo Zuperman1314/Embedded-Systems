@@ -24,10 +24,12 @@
 volatile int btnFlag = LOW;
 int counter = 0; // A counter for number of pprocesses
 int32_t temperature; //raw temp readings
+int32_t threshold = 23; // temperature threshold
 
 LiquidCrystal_I2C lcd(16, 2); //Create a LCD instance
 NTC_FR myNTC; //Create a temp sens instance
-
+Servo myservo; //Create servo object to control a servo
+int pos = 0; //variable to store the servo position
 
 void setup()
 {
@@ -39,6 +41,8 @@ void setup()
 	lcd.init(); 		//Initialize LCD
 	lcd.backlight();	//Turn ICD backlight on
 	myNTC.begin();		//Initialize Temp Sensor
+  myservo.attach(9) //attaches the servo on pin 9 to the servo object, CHECK
+
 }
 
 void loop()
@@ -96,6 +100,21 @@ void loop()
 		break;
 	}
 	delay(1250);
+  
+    //SERVOSWIPE//
+  while(t > threshold)
+  {
+    for(pos = 0; pos < 180; pos += 1)  // goes from 0 degrees to 180 degrees 
+    {                                  // in steps of 1 degree 
+      myservo.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(15);                       // waits 15ms for the servo to reach the position 
+    } 
+    for(pos = 180; pos>=1; pos-=1)     // goes from 180 degrees to 0 degrees 
+    {                                
+      myservo.write(pos);              // tell servo to go to position in variable 'pos' 
+      delay(15);                       // waits 15ms for the servo to reach the position 
+    }
+  } //end of while loop 
 }
 
 void count()
