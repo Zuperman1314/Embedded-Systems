@@ -43,9 +43,6 @@ void setup()
 
 void loop()
 {
-	//uint8_t add = scanI2C() - 100;
-	//Serial.print("Address: ");
-	//Serial.println(add);
 	lcd.clear(); //Clear everyting on LCD
 	if (btnFlag)
 	{
@@ -56,49 +53,49 @@ void loop()
 	switch (counter) 
 	{
 	    case 1:
-	      // Name -> LCE
-	    	#ifdef DEBUG
-		    	Serial.print(counter);
-		    	Serial.print('\t');
-		    	Serial.println("Mode 1");
-		    #else
-				lcd.setCursor(0,0);
-				lcd.print("Amir Nafisa");
-				lcd.setCursor(0,1);
-				lcd.print("Elvira");
-	    	#endif
-	      break;
+		// Name -> LCE
+		#ifdef DEBUG
+			Serial.print(counter);
+			Serial.print('\t');
+			Serial.println("Mode 1");
+		#else
+			lcd.setCursor(0,0);
+			lcd.print("Amir Nafisa");
+			lcd.setCursor(0,1);
+			lcd.print("Elvira");
+		#endif
+		break;
 	    case 2:
-	      // Temp -> LCD
-	      // Temp (trigger) -> servo
-	    	#ifdef DEBUG
-		    	Serial.print(counter);
-		    	Serial.print('\t');
-		    	Serial.println("Mode 2");
-		    #else
-		    	myNTC.get();
-		    	myNTC.celsiusX10(temperature);
-		    	myNTC.lcdPrint(temperature, lcd, 'C');
-		    	myNTC.fahrenheitX10(temperature);
-		    	myNTC.lcdPrint(temperature, lcd, 'F');
-	    	#endif
-	    	break;
+		// Temp -> LCD
+		// Temp (trigger) -> servo
+		#ifdef DEBUG
+			Serial.print(counter);
+			Serial.print('\t');
+			Serial.println("Mode 2");
+		#else
+			myNTC.get();
+			myNTC.celsiusX10(temperature);
+			myNTC.lcdPrint(temperature, lcd, 'C');
+			myNTC.fahrenheitX10(temperature);
+			myNTC.lcdPrint(temperature, lcd, 'F');
+		#endif
+		break;
 	    case 3:
-	      // acce -> LCD
-	      // acce -> LEDs
-	    	#ifdef DEBUG
-		    	Serial.print(counter);
-		    	Serial.print('\t');
-		    	Serial.println("Mode 3");
-		    #else
+		// acce -> LCD
+		// acce -> LEDs
+		#ifdef DEBUG
+			Serial.print(counter);
+			Serial.print('\t');
+			Serial.println("Mode 3");
+		#else
 
-	    	#endif
-	      break;
+		#endif
+    	break;
 	    default:
-	      // ERROR
-	      break;
+		// ERROR
+		break;
 	}
-	delay(2000);
+	delay(1250);
 }
 
 void count()

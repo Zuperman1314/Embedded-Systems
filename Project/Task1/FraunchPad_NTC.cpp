@@ -136,7 +136,7 @@ void NTC_FR::lcdPrint(int32_t i, LiquidCrystal_I2C x, char c)
   if (c == 'C')
   { 
     x.setCursor(0,0);
-    x.print("DEGC. ");
+    x.print("DEGC: ");
     x.print(i/10);
     x.print(".");
     x.print(i%10);  
@@ -144,7 +144,7 @@ void NTC_FR::lcdPrint(int32_t i, LiquidCrystal_I2C x, char c)
   else if (c == 'F')
   {
     x.setCursor(0,1);
-    x.print("DEGF. ");
+    x.print("DEGF: ");
     x.print(i/10);
     x.print(".");
     x.print(i%10); 
