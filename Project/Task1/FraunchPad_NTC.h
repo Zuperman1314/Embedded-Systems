@@ -89,10 +89,15 @@ public:
   void serialPrint(int32_t i, char c);
   void lcdPrint(int32_t i, LiquidCrystal_I2C x ,char c);
 
+
+  int E();
+
 private:
-  int64_t _t;
-  int32_t _vRef;
-  int32_t _rDiv;
+  unsigned int _t;
+  int _vRef;
+  int _rDiv;
+
+  signed char _tH;  //used as tiny int such that |_tH| is number of 0's to concat to end of an int (_t) and is a 'signed' char so that it can be negative to divide by 10's instead
 };
 
 
