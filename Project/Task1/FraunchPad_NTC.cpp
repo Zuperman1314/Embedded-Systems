@@ -20,12 +20,16 @@
 
 #include "FraunchPad_NTC.h"
 
+#define getRef(i) (((i) - 5) * 5)
+
 //
 // Table generated with TDK / Epcos NTC R/T Calculation 5.0
 // http://www.epcos.com/designtools/ntc/index.html
 // Select B57560G1104 for NTC 100 k = 25 oC
 // with temperature scaling = 5 oC, lower limit = -25 oC and upper limit = + 75 oC
 //
+
+/*
 int32_t table[21][2] = {
   {-25, 1344300},
   {-20,  998530},
@@ -49,6 +53,32 @@ int32_t table[21][2] = {
   { 70,   16841},
   { 75,   14164}
 };
+*/
+
+int table[21] = {
+  1344300,
+   998530,
+   748670,
+   566360,
+   432120,
+   332400,
+   257690,
+   201270,
+   158340,
+   125420,
+   100000,
+    80239,
+    64776,
+    52598,
+    42950,
+    35262,
+    29100,
+    24136,
+    20114,
+    16841,
+    14164
+};
+
 
 
 // Class
@@ -78,7 +108,7 @@ void NTC_FR::get() {
   _t = (_t * _rDiv) / (_vRef - _t) / 1000;
 }
 
-
+/*
 void NTC_FR::celsiusX10(int32_t &t) {
   t = 9999;
   
@@ -94,7 +124,26 @@ void NTC_FR::celsiusX10(int32_t &t) {
     }
   }
 }
+*/
 
+void NTC_FR::celsiusX10(int32_t &t) {
+  int i;
+  t = 9999;
+
+  //
+  // Based on table algorithm by larsie — Tue Apr 03, 2012 1:18 pm
+  // http://www.43oh.com/forum/viewtopic.php?f=10&p=18608#p18608
+  //
+  for (i=1; i<21; i++) {
+    if (table[i] < _t) {
+      t = map(_t, table[i-1], table[i], 100*getRef(i-1), 100*getRef(i));
+      t /= 10;
+      break;
+    }
+  }
+}
+
+/*
 void NTC_FR::fahrenheitX10(int32_t &t) {
   t = 9999;
   
@@ -105,6 +154,24 @@ void NTC_FR::fahrenheitX10(int32_t &t) {
   for (uint8_t i=1; i<21; i++) {
     if (table[i][1] < _t) {
       t = map(_t, table[i-1][1], table[i][1], 100*table[i-1][0], 100*table[i][0]);
+      t = (t*9 + 1600) / 50;
+      break;
+    }
+  }
+}
+*/
+
+void NTC_FR::fahrenheitX10(int32_t &t) {
+  int i;
+  t = 9999;
+
+  //
+  // Based on table algorithm by larsie — Tue Apr 03, 2012 1:18 pm
+  // http://www.43oh.com/forum/viewtopic.php?f=10&p=18608#p18608
+  //
+  for (int i=1; i<21; i++) {
+    if (table[i] < _t) {
+      t = map(_t, table[i-1], table[i], 100*getRef(i-1), 100*getRef(i));
       t = (t*9 + 1600) / 50;
       break;
     }
