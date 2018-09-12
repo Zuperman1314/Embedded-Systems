@@ -92,8 +92,11 @@ NTC_FR::NTC_FR() {
 void NTC_FR::begin() {
   digitalWrite(NTC_ENABLE, HIGH);
   
-  _vRef = 3000; // 3000 mV
-  _rDiv = 470000000; // 
+  //_vRef = 3000; // 3000 mV
+  _vRef = 3;
+  //_rDiv = 470000000; // 
+  _rDiv = 470;
+  _tH = 9;
 }
 
 
@@ -101,11 +104,20 @@ String NTC_FR::WhoAmI() {
   return "FraunchPad NTC thermometer";
 }
 
-
+/*
 void NTC_FR::get() {
   _t = analogRead(A1);
   _t = (_t * _vRef) / 1024;
   _t = (_t * _rDiv) / (_vRef - _t) / 1000;
+}
+*/
+
+void NTC_FR::get() {
+  _t = analogRead(A1);
+  _t = (_t * _vRef) / 1024;
+  //_t = (_t * _rDiv) / (_vRef - _t) / 1000;
+  _t = (_t * _rDiv) / (_vRef - _t);
+  _tH -= 3;
 }
 
 /*
@@ -135,8 +147,8 @@ void NTC_FR::celsiusX10(int32_t &t) {
   // http://www.43oh.com/forum/viewtopic.php?f=10&p=18608#p18608
   //
   for (i=1; i<21; i++) {
-    if (table[i] < _t) {
-      t = map(_t, table[i-1], table[i], 100*getRef(i-1), 100*getRef(i));
+    if (table[i] < _t * E()) {
+      t = map(_t * E(), table[i-1], table[i], 100*getRef(i-1), 100*getRef(i));
       t /= 10;
       break;
     }
@@ -170,8 +182,8 @@ void NTC_FR::fahrenheitX10(int32_t &t) {
   // http://www.43oh.com/forum/viewtopic.php?f=10&p=18608#p18608
   //
   for (int i=1; i<21; i++) {
-    if (table[i] < _t) {
-      t = map(_t, table[i-1], table[i], 100*getRef(i-1), 100*getRef(i));
+    if (table[i] < _t * E()) {
+      t = map(_t * E(), table[i-1], table[i], 100*getRef(i-1), 100*getRef(i));
       t = (t*9 + 1600) / 50;
       break;
     }
@@ -195,7 +207,7 @@ void NTC_FR::serialPrint(int32_t i, char c)
   else if (c == 'F')
   {
     Serial.print(" oF\n");
-  } 
+  }
 }
 
 void NTC_FR::lcdPrint(int32_t i, LiquidCrystal_I2C x, char c)
@@ -214,6 +226,28 @@ void NTC_FR::lcdPrint(int32_t i, LiquidCrystal_I2C x, char c)
     x.print("DEGF: ");
     x.print(i/10);
     x.print(".");
-    x.print(i%10); 
+    x.print(i%10);
   }
+}
+
+int E()
+{
+  int temp = (int)_tH;
+  int val = 1;
+  int ii;
+  if(temp < 0)
+  {
+    temp = -temp;
+    for(ii = 0; ii < temp; ii++)
+    {
+      _t /= 10;
+    }
+  }else
+  {
+    for(ii = 0; ii < temp; ii++)
+    {
+      val *= 10;
+    }
+  }
+  return val;
 }
